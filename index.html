@@ -15,21 +15,30 @@
 </head>
 
 <body>
-<p class="h4 text-center bg-success text-white p-3">Julias Ein-Mal-Eins-Trainer</p>
+
+
+<div class="h4 text-center bg-success text-white py-1">
+    <div>Julias</div>
+    <div class="pb-2">Ein-Mal-Eins-Trainer</div>
+</div>
 
 <div class="container" id="startview">
-    <p>Liebe Julia</p>
+    <p class="mt-4">Liebe Julia,</p>
     <p>möchtest du gerne ein Meister des Ein-Mal-Eins werden?</p>
     <p>Dann lass uns etwas üben! Zeige was du kannst!</p>
     <p>Versuche zehn Aufgaben so schnell wie möglich zu lösen.</p>
-    <button class="btn btn-primary " id="startbutton">Neues Spiel starten</button>
+    <div class="row text-center">
+        <div class="col-12 mt-4">
+            <button class="btn btn-primary btn-lg" id="startbutton">Spiel starten</button>
+        </div>
+    </div>
 </div>
 
 <div class="container" id="frageview">
     <div class="row mt-4">
         <div class="col col-12">
             <div class="progress">
-                <div id="progress" class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                <div id="progress" class="progress-bar bg-success" role="progressbar"
                      aria-valuenow="25"
                      aria-valuemin="0" aria-valuemax="100"></div>
             </div>
@@ -66,6 +75,17 @@
     </div>
 </div>
 
+<div class="container mt-4" id="fehlerview">
+    <div class="alert alert-danger h2 text-center">
+        <div>
+            Das war leider falsch!
+        </div>
+        <div class="mt-4">
+            Bitte warten ...
+        </div>
+    </div>
+</div>
+
 <div class="container" id="endview">
     <h1 class="h1 text-center mt-3"><i class="fas fa-thumbs-up"></i></h1>
     <h1 class="h1 text-center">Gut gemacht!</h1>
@@ -74,7 +94,7 @@
     <h2 class="h2 text-center">benötigt.</h2>
     <div class="row text-center">
         <div class="col-12 mt-4">
-            <btn class="btn btn-primary btn-lg" id="nochmalbutton">Nochmal spielen</btn>
+            <button class="btn btn-primary btn-lg" id="nochmalbutton">Nochmal spielen</button>
         </div>
     </div>
 </div>

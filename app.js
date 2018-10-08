@@ -91,12 +91,15 @@ class Spiel {
     }
 
     beantworteFrage(antwortNr) {
+       let erg = false;
         if (this.Frage.getNrderRichtenAntwort() === antwortNr) {
+            erg = true;
             this.aktuellePunktzahl += 1;
         }
         this.Frage = this.generiereNeueFrage();
         if (this.isSpielFertig())
             this.Spielende = new Date();
+        return erg;
     }
 
     isSpielFertig(){
@@ -125,6 +128,7 @@ class UI {
         this.uistartview = document.querySelector('#startview');
         this.uifrageview = document.querySelector('#frageview');
         this.uiendview = document.querySelector('#endview');
+        this.uifehlerview = document.querySelector('#fehlerview');
         this.uiprogressbar = document.querySelector("#progress");
         this.uizahl1 = document.querySelector('#zahl1');
         this.uizahl2 = document.querySelector('#zahl2');
@@ -133,17 +137,23 @@ class UI {
         this.uiantwort3 = document.querySelector('#btn3');
         this.uiantwort4 = document.querySelector('#btn4');
         this.uizeitverbrauch = document.querySelector('#zeitverbrauch');
-    }
+        this.audioOk = new Audio("ButtonClick.mp3");
+        this.audioOk.loop = false;
+        this.audioFalsch = new Audio("Fehler.mp3");
+        this.audioFalsch.loop = false;
+     }
 
     showStartPage() {
         this.uistartview.style.display = "block";
         this.uifrageview.style.display = "none";
+        this.uifehlerview.style.display = "none";
         this.uiendview.style.display = "none";
     }
 
     showFrage(frage) {
         this.uistartview.style.display = "none";
         this.uifrageview.style.display = "block";
+        this.uifehlerview.style.display = "none";
         this.uiendview.style.display = "none";
         this.uizahl1.innerHTML = `${frage.zahl1}`;
         this.uizahl2.innerHTML = `${frage.zahl2}`;
@@ -153,9 +163,17 @@ class UI {
         this.uiantwort4.innerHTML = `${frage.ant4}`;
     }
 
+    showFehler(){
+        this.uistartview.style.display = "none";
+        this.uifrageview.style.display = "none";
+        this.uifehlerview.style.display = "block";
+        this.uiendview.style.display = "none";
+    }
+
     showEnde(zeit) {
         this.uistartview.style.display = "none";
         this.uifrageview.style.display = "none";
+        this.uifehlerview.style.display = "none";
         this.uiendview.style.display = "block";
         this.uizeitverbrauch.innerHTML = `${zeit} Sekunden`;
     }
@@ -163,6 +181,15 @@ class UI {
     setprogress(prozent) {
         this.uiprogressbar.style.width = prozent + '%';
     }
+
+    playOk(){
+        this.audioOk.play();
+    }
+
+    playFalsch(){
+        this.audioFalsch.play();
+    }
+
 }
 
 
@@ -178,6 +205,7 @@ class Controller {
         });
         this.ui.uiantwort1.addEventListener("click", () => {
             this.antworte(1);
+
         });
         this.ui.uiantwort2.addEventListener("click", () => {
             this.antworte(2);
@@ -201,12 +229,27 @@ class Controller {
         ui.setprogress(this.spiel.getSpielFortschrittInProzent());
     };
 
-    antworte(antwortnr) {
-        spiel.beantworteFrage(antwortnr);
-        ui.showFrage(this.spiel.Frage);
-        ui.setprogress(this.spiel.getSpielFortschrittInProzent());
-        if (spiel.isSpielFertig()) {
+    weiterImSpiel(){
+        if (this.spiel.isSpielFertig()) {
             ui.showEnde(spiel.getSpielDauer());
+        }
+        else{
+            ui.setprogress(this.spiel.getSpielFortschrittInProzent());
+            ui.showFrage(this.spiel.Frage);
+        }
+    }
+
+    antworte(antwortnr) {
+        let erg = this.spiel.beantworteFrage(antwortnr);
+        if (!erg) {
+            ui.playFalsch();
+            ui.showFehler();
+            setTimeout( () => {this.weiterImSpiel();}, 3000);
+        }
+        else
+        {
+            ui.playOk();
+            this.weiterImSpiel();
         }
     };
 
