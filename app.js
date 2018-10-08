@@ -234,7 +234,7 @@ let fragendefinitionen = [
     new FragenDefinition(9, 9, 63, 99, 72),
 ];
 
-const spiel = new Spiel(fragendefinitionen, 3);
+const spiel = new Spiel(fragendefinitionen, 10);
 const ui = new UI();
 const controller = new Controller(spiel, ui);
 controller.reset();
