@@ -55,6 +55,8 @@ class Spiel {
         this.fragendefinitionen = fragendefinitionen;
         this.aktuelleDefinitionen = [];
         this.Frage = null;
+        this.Spielstart = null;
+        this.Spielende = null;
     }
 
     resetSpiel() {
@@ -67,6 +69,7 @@ class Spiel {
         this.aktuellePunktzahl = 0;
         this.aktuelleDefinitionen = this.fragendefinitionen.slice(0);
         this.Frage = this.generiereNeueFrage();
+        this.Spielstart = new Date();
     }
 
     generiereNeueFrage() {
@@ -92,6 +95,8 @@ class Spiel {
             this.aktuellePunktzahl += 1;
         }
         this.Frage = this.generiereNeueFrage();
+        if (this.isSpielFertig())
+            this.Spielende = new Date();
     }
 
     isSpielFertig(){
@@ -101,6 +106,15 @@ class Spiel {
 
     getSpielFortschrittInProzent() {
         return Math.round(this.aktuellePunktzahl / this.punkteziel * 100);
+    }
+
+    getSpielDauer(){
+        let endzeit = new Date();
+        if (this.Spielende = null){
+            endzeit = this.Spielende;
+        }
+        let millisec = endzeit.getTime() - this.Spielstart.getTime();
+        return Math.round((millisec) / 10) / 100;
     }
 }
 
@@ -118,6 +132,7 @@ class UI {
         this.uiantwort2 = document.querySelector('#btn2');
         this.uiantwort3 = document.querySelector('#btn3');
         this.uiantwort4 = document.querySelector('#btn4');
+        this.uizeitverbrauch = document.querySelector('#zeitverbrauch');
     }
 
     showStartPage() {
@@ -138,10 +153,11 @@ class UI {
         this.uiantwort4.innerHTML = `${frage.ant4}`;
     }
 
-    showEnde() {
+    showEnde(zeit) {
         this.uistartview.style.display = "none";
         this.uifrageview.style.display = "none";
         this.uiendview.style.display = "block";
+        this.uizeitverbrauch.innerHTML = `${zeit} Sekunden`;
     }
 
     setprogress(prozent) {
@@ -190,7 +206,7 @@ class Controller {
         ui.showFrage(this.spiel.Frage);
         ui.setprogress(this.spiel.getSpielFortschrittInProzent());
         if (spiel.isSpielFertig()) {
-            ui.showEnde();
+            ui.showEnde(spiel.getSpielDauer());
         }
     };
 
@@ -234,7 +250,7 @@ let fragendefinitionen = [
     new FragenDefinition(9, 9, 63, 99, 72),
 ];
 
-const spiel = new Spiel(fragendefinitionen, 3);
+const spiel = new Spiel(fragendefinitionen, 10);
 const ui = new UI();
 const controller = new Controller(spiel, ui);
 controller.reset();
